@@ -35,13 +35,13 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
   };
 
   return (
-    <Card className="w-full border-2 border-primary/20 shadow-xl bg-gradient-to-br from-card to-background/60 hover:shadow-lg transition-all">
+    <Card className="w-full border shadow hover:shadow-md transition-all">
       <CardHeader className="pb-4 space-y-1">
         <div className="flex items-center gap-2 mb-1">
-          <Github className="h-5 w-5 text-primary" />
-          <CardTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Repository Details</CardTitle>
+          <Github className="h-5 w-5 text-gray-600" />
+          <CardTitle>Repository Details</CardTitle>
         </div>
-        <CardDescription className="text-muted-foreground">
+        <CardDescription className="text-gray-500">
           Enter your GitHub repository and access token to generate a beautiful changelog
         </CardDescription>
       </CardHeader>
@@ -57,11 +57,11 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
                 placeholder="owner/repo"
                 value={repoInput}
                 onChange={(e) => setRepoInput(e.target.value)}
-                className="font-mono pl-4 pr-4 focus-visible:ring-primary/50 transition-all"
+                className="font-mono pl-4 pr-4"
               />
             </div>
-            <p className="text-xs text-muted-foreground">
-              Format: <code className="px-1 py-0.5 bg-muted rounded text-xs">username/repository</code> or <code className="px-1 py-0.5 bg-muted rounded text-xs">organization/repository</code>
+            <p className="text-xs text-gray-500">
+              Format: <code className="px-1 py-0.5 bg-gray-100 rounded text-xs">username/repository</code> or <code className="px-1 py-0.5 bg-gray-100 rounded text-xs">organization/repository</code>
             </p>
           </div>
           
@@ -78,9 +78,9 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              className="font-mono focus-visible:ring-primary/50 transition-all"
+              className="font-mono"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-gray-500">
               Your token is never stored and only used to access the repo data
             </p>
           </div>
@@ -88,7 +88,7 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
         <CardFooter className="pt-2">
           <Button 
             type="submit" 
-            className="w-full group transition-all hover:shadow-md border-primary/20 hover:bg-primary/90"
+            className="w-full group bg-green-600 hover:bg-green-700 text-white"
             disabled={isLoading}
           >
             {isLoading ? 'Fetching & Generating...' : 

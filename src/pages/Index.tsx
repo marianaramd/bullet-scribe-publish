@@ -1,9 +1,12 @@
 
 import React, { useState } from 'react';
 import AppHeader from '@/components/AppHeader';
+import Sidebar from '@/components/Sidebar';
+import Dashboard from '@/components/Dashboard';
 import GitHubForm from '@/components/GitHubForm';
 import ChangelogOutput from '@/components/ChangelogOutput';
 import { toast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Mock function to simulate fetching from GitHub API and AI-generation
 // In a real application, this would call the GitHub API and then process with AI
@@ -48,6 +51,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [changelog, setChangelog] = useState<any[] | null>(null);
   const [repoDetails, setRepoDetails] = useState<{ owner: string; name: string } | null>(null);
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   const handleGenerate = async ({ repoOwner, repoName, token }: { repoOwner: string; repoName: string; token?: string }) => {
     setIsLoading(true);
@@ -59,6 +63,7 @@ const Index = () => {
       
       setChangelog(generatedChangelog);
       setRepoDetails({ owner: repoOwner, name: repoName });
+      setActiveTab("changelog");
       
       toast({
         title: 'Changelog generated successfully!',
@@ -78,51 +83,53 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen">
       <AppHeader />
       
-      <main className="container py-8 flex-1">
-        <div className="max-w-5xl mx-auto space-y-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2">AI-Powered Changelog Generator</h2>
-            <p className="text-muted-foreground">
-              Generate beautiful, structured changelogs from your GitHub repository with AI
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-8">
-            <div>
-              <GitHubForm 
-                onGenerate={handleGenerate} 
-                isLoading={isLoading} 
-              />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        
+        <main className="flex-1 overflow-auto bg-gray-50">
+          <div className="p-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList>
+                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+                <TabsTrigger value="generate">Generate Changelog</TabsTrigger>
+                {changelog && (
+                  <TabsTrigger value="changelog">View Changelog</TabsTrigger>
+                )}
+              </TabsList>
               
-              <div className="mt-4 text-sm text-center text-muted-foreground">
-                <p>
-                  Need help? See our
-                  <a href="#" className="text-primary hover:underline ml-1">
-                    documentation
-                  </a>.
-                </p>
+              <div className="mt-6">
+                <TabsContent value="dashboard">
+                  <Dashboard />
+                </TabsContent>
+                
+                <TabsContent value="generate">
+                  <div className="max-w-4xl mx-auto">
+                    <h2 className="text-2xl font-bold mb-4">Generate Changelog</h2>
+                    <GitHubForm 
+                      onGenerate={handleGenerate} 
+                      isLoading={isLoading} 
+                    />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="changelog">
+                  <div className="max-w-4xl mx-auto">
+                    <h2 className="text-2xl font-bold mb-4">Changelog Result</h2>
+                    <ChangelogOutput 
+                      isLoading={isLoading} 
+                      changelog={changelog} 
+                      repoDetails={repoDetails} 
+                    />
+                  </div>
+                </TabsContent>
               </div>
-            </div>
-            
-            <div>
-              <ChangelogOutput 
-                isLoading={isLoading} 
-                changelog={changelog} 
-                repoDetails={repoDetails} 
-              />
-            </div>
+            </Tabs>
           </div>
-        </div>
-      </main>
-      
-      <footer className="border-t border-border py-6">
-        <div className="container text-center text-sm text-muted-foreground">
-          <p>DevChangelog – AI-powered release notes generator for developers</p>
-        </div>
-      </footer>
+        </main>
+      </div>
     </div>
   );
 };
