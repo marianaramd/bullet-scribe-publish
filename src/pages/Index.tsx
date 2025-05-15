@@ -7,9 +7,12 @@ import { toast } from '@/hooks/use-toast';
 
 // Mock function to simulate fetching from GitHub API and AI-generation
 // In a real application, this would call the GitHub API and then process with AI
-const generateChangelog = async (owner: string, repo: string) => {
+const generateChangelog = async (owner: string, repo: string, token?: string) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // In a real implementation, the token would be used for GitHub API authentication
+  console.log('Using token:', token ? 'Token provided' : 'No token provided');
   
   // Mock response - in a real app this would be from GitHub API + AI
   return [
@@ -46,13 +49,13 @@ const Index = () => {
   const [changelog, setChangelog] = useState<any[] | null>(null);
   const [repoDetails, setRepoDetails] = useState<{ owner: string; name: string } | null>(null);
 
-  const handleGenerate = async ({ repoOwner, repoName }: { repoOwner: string; repoName: string }) => {
+  const handleGenerate = async ({ repoOwner, repoName, token }: { repoOwner: string; repoName: string; token?: string }) => {
     setIsLoading(true);
     
     try {
       console.log('Repo details:', repoOwner + '/' + repoName);
       
-      const generatedChangelog = await generateChangelog(repoOwner, repoName);
+      const generatedChangelog = await generateChangelog(repoOwner, repoName, token);
       
       setChangelog(generatedChangelog);
       setRepoDetails({ owner: repoOwner, name: repoName });
