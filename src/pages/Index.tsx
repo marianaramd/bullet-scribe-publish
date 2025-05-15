@@ -7,7 +7,7 @@ import { toast } from '@/hooks/use-toast';
 
 // Mock function to simulate fetching from GitHub API and AI-generation
 // In a real application, this would call the GitHub API and then process with AI
-const generateChangelog = async (token: string, owner: string, repo: string) => {
+const generateChangelog = async (owner: string, repo: string) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 2000));
   
@@ -46,15 +46,13 @@ const Index = () => {
   const [changelog, setChangelog] = useState<any[] | null>(null);
   const [repoDetails, setRepoDetails] = useState<{ owner: string; name: string } | null>(null);
 
-  const handleGenerate = async ({ token, repoOwner, repoName }: { token: string; repoOwner: string; repoName: string }) => {
+  const handleGenerate = async ({ repoOwner, repoName }: { repoOwner: string; repoName: string }) => {
     setIsLoading(true);
     
     try {
-      // In a real app, we would use the token to authenticate with GitHub API
-      console.log('Generating changelog with token:', token.substring(0, 4) + '***');
       console.log('Repo details:', repoOwner + '/' + repoName);
       
-      const generatedChangelog = await generateChangelog(token, repoOwner, repoName);
+      const generatedChangelog = await generateChangelog(repoOwner, repoName);
       
       setChangelog(generatedChangelog);
       setRepoDetails({ owner: repoOwner, name: repoName });
@@ -89,17 +87,14 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="lg:sticky lg:top-8 self-start">
+          <div className="grid grid-cols-1 gap-8">
+            <div>
               <GitHubForm 
                 onGenerate={handleGenerate} 
                 isLoading={isLoading} 
               />
               
-              <div className="mt-4 text-sm text-muted-foreground">
-                <p className="mb-2">
-                  Your GitHub token is only used locally to fetch repository data and is never stored on our servers.
-                </p>
+              <div className="mt-4 text-sm text-center text-muted-foreground">
                 <p>
                   Need help? See our
                   <a href="#" className="text-primary hover:underline ml-1">

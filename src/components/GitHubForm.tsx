@@ -5,28 +5,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { ArrowRight } from 'lucide-react';
 
 interface GitHubFormProps {
-  onGenerate: (data: { token: string; repoOwner: string; repoName: string }) => void;
+  onGenerate: (data: { repoOwner: string; repoName: string }) => void;
   isLoading: boolean;
 }
 
 const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
-  const [token, setToken] = useState('');
   const [repoInput, setRepoInput] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate token
-    if (!token.trim()) {
-      toast({
-        title: 'Missing Personal Access Token',
-        description: 'Please enter your GitHub Personal Access Token',
-        variant: 'destructive',
-      });
-      return;
-    }
     
     // Validate and parse repo format (owner/name)
     const repoMatch = repoInput.match(/^([^/]+)\/([^/]+)$/);
@@ -40,56 +30,48 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
     }
     
     const [, repoOwner, repoName] = repoMatch;
-    onGenerate({ token, repoOwner, repoName });
+    onGenerate({ repoOwner, repoName });
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>GitHub Repository Details</CardTitle>
-        <CardDescription>
-          Enter your GitHub personal access token and repository details to generate a changelog
+    <Card className="w-full border-2 border-primary/10 shadow-lg bg-gradient-to-b from-card to-background">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl font-bold text-primary">Repository Details</CardTitle>
+        <CardDescription className="text-muted-foreground">
+          Enter your GitHub repository to generate a beautiful changelog
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="github-token">GitHub Personal Access Token</Label>
-            <Input
-              id="github-token"
-              type="password"
-              placeholder="ghp_***********************************"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              autoComplete="off"
-              className="font-mono"
-            />
-            <p className="text-xs text-muted-foreground">
-              Needs <code>repo</code> scope permissions
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="github-repo">Repository</Label>
-            <Input
-              id="github-repo"
-              placeholder="owner/repo"
-              value={repoInput}
-              onChange={(e) => setRepoInput(e.target.value)}
-              className="font-mono"
-            />
-            <p className="text-xs text-muted-foreground">
+        <CardContent className="pb-2">
+          <div className="space-y-1">
+            <Label htmlFor="github-repo" className="text-sm font-medium">
+              Repository
+            </Label>
+            <div className="relative">
+              <Input
+                id="github-repo"
+                placeholder="owner/repo"
+                value={repoInput}
+                onChange={(e) => setRepoInput(e.target.value)}
+                className="font-mono pl-4 pr-4 focus-visible:ring-primary/50"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
               Format: <code>username/repository</code> or <code>organization/repository</code>
             </p>
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="pt-2">
           <Button 
             type="submit" 
-            className="w-full"
+            className="w-full group transition-all hover:shadow-md"
             disabled={isLoading}
           >
-            {isLoading ? 'Fetching & Generating...' : 'Fetch & Generate'}
+            {isLoading ? 'Fetching & Generating...' : 
+              <span className="flex items-center gap-2">
+                Fetch & Generate <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+            }
           </Button>
         </CardFooter>
       </form>
