@@ -35,18 +35,18 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
   };
 
   return (
-    <Card className="w-full border shadow hover:shadow-md transition-all">
-      <CardHeader className="pb-4 space-y-1">
+    <Card className="w-full border shadow-md bg-gradient-to-br from-gray-50 to-gray-100">
+      <CardHeader className="pb-4 space-y-1 border-b">
         <div className="flex items-center gap-2 mb-1">
-          <Github className="h-5 w-5 text-gray-600" />
+          <Github className="h-5 w-5 text-gray-700" />
           <CardTitle>Repository Details</CardTitle>
         </div>
-        <CardDescription className="text-gray-500">
+        <CardDescription className="text-gray-600">
           Enter your GitHub repository and access token to generate a beautiful changelog
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-6">
           <div className="space-y-2">
             <Label htmlFor="github-repo" className="text-sm font-medium flex items-center gap-1">
               <Code className="h-4 w-4" /> Repository
@@ -57,7 +57,7 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
                 placeholder="owner/repo"
                 value={repoInput}
                 onChange={(e) => setRepoInput(e.target.value)}
-                className="font-mono pl-4 pr-4"
+                className="font-mono pl-4 pr-4 border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
             <p className="text-xs text-gray-500">
@@ -78,14 +78,14 @@ const GitHubForm = ({ onGenerate, isLoading }: GitHubFormProps) => {
               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              className="font-mono"
+              className="font-mono border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary"
             />
             <p className="text-xs text-gray-500">
               Your token is never stored and only used to access the repo data
             </p>
           </div>
         </CardContent>
-        <CardFooter className="pt-2">
+        <CardFooter className="pt-2 bg-gradient-to-b from-transparent to-gray-100 rounded-b-lg">
           <Button 
             type="submit" 
             className="w-full group bg-green-600 hover:bg-green-700 text-white"
